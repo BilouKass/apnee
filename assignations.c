@@ -60,7 +60,7 @@ int powe(int a, int b){ //algo naif de l'exponentiation
     }
     return out;
 }
-int combi(int n, int k) {
+int combi(int n, int k) { //algo opti de K parmis N
     if (k > n) return 0;
     if (k == 0 || k == n) return 1;
     
@@ -87,29 +87,32 @@ const char* token_name(int type) {
         case VAR: return "VAR";
         case ASSIGN: return "ASSIGN";
         case UNDERSCORE: return "UNDERSCORE";
-        default: return "UNKNOWN";
+        default: return "?";
     }
 }
 
-void syntax_error(const char* non_terminal, const char* expected) {
+void erreur(const char* non_terminal, const char* expected) {
     Token* tok = currentToken();
     if (tok == NULL) {
-        fprintf(stderr, "SYNTAX ERROR in %s: unexpected end of file\n", non_terminal);
+        fprintf(stderr, "SYNTAX ERROR in %s: unexpected EOF\n", non_terminal);
         fprintf(stderr, "  Expected: %s\n", expected);
     } else {
-        fprintf(stderr, "SYNTAX ERROR in %s: unexpected token '%s' (%s)\n", 
-                non_terminal, tok->text, token_name(tok->type));
+        fprintf(stderr, "SYNTAX ERROR in %s: unexpected token '%s' (%s)\n", non_terminal, tok->text, token_name(tok->type));
         fprintf(stderr, "  Expected: %s\n", expected);
     }
+    exit(-1);
 }
 
 void S(void){
     switch (currentToken()->type) {
     case VAR: //R0
+    case INT: //R0
+    case MINUS: //R0
+    case OPAR: //R0
         A();
         break;
     default:
-        syntax_error("S", "VAR, MINUS, OPAR or INT");
+        erreur("S", "VAR, -, ( or INT");
         break;
     }
 }
@@ -128,7 +131,7 @@ void A(void) {
     case SEMICOLON: //R2
         break;
     default:
-        syntax_error("A", "VAR, MINUS, OPAR, INT or SEMICOLON");
+        erreur("A", "VAR, -, (, INT or ;");
         break;
     }
 }
@@ -154,7 +157,7 @@ int L(void) {
 
         break;
     default:
-        syntax_error("L", "VAR, MINUS, OPAR or INT");
+        erreur("L", "VAR, -, ( or INT");
         break;
     }
     return a;
@@ -163,7 +166,7 @@ int L(void) {
 char *V(void) { // envisager un retour d'une adresse mémoire relié à la variable (peut être une adresse de tableau qu'on realloc en cas d'ajout)
     char *out;
     if (currentToken()->type != VAR) { //R5
-        syntax_error("V", "VAR");
+        erreur("V", "VAR");
     }
     out = get_text(currentToken());
     consume(VAR);
@@ -190,7 +193,7 @@ int E(void) {
 
     
     default:
-        syntax_error("E", "VAR, MINUS, OPAR or INT");
+        erreur("E", "VAR, -, ( or INT");
         break;
     }
     return a;
@@ -217,7 +220,7 @@ int Ep(int a) {
         break;
 
     default:
-        syntax_error("E'", "PLUS, MINUS, SEMICOLON or FPAR");
+        erreur("E'", "+, -, ; or )");
         break;
     }
     return a;
@@ -227,15 +230,15 @@ int T(void) {
     int a;
     switch (currentToken()->type) {
     case MINUS: //R11
-    case OPAR: //R11
-    case VAR: //R11
-    case INT: //R11
+    case OPAR:
+    case VAR:
+    case INT: 
         a = G();
         a = Tp(a);
         break;
     
     default:
-        syntax_error("T", "VAR, MINUS, OPAR or INT");
+        erreur("T", "VAR, -, ( or INT");
         break;
     }
     return a;
@@ -261,7 +264,7 @@ int Tp(int a) {
             a = Tp(a);
             break;
         default:
-            syntax_error("T'", "DIV, MULT, SEMICOLON, PLUS, MINUS or FPAR");
+            erreur("T'", "/, *, ;, +, - or )");
             break;
     }
     return a;
@@ -284,7 +287,7 @@ int G(void) {
             }
             break;
         default:
-            syntax_error("G", "MINUS, VAR, INT or OPAR");
+            erreur("G", "-, VAR, INT or (");
             break;
     }
     return a;
@@ -298,12 +301,13 @@ int B(void) {
         case INT:
         case VAR:
             a = F();
-            Bp(a);
+            a = Bp(a);
             break;
         default:
-            syntax_error("B", "MINUS, OPAR, INT or VAR");
+            erreur("B", "-, (, INT or VAR");
             break;
     }
+    return a;
 }
 
 int Bp(int a)  {
@@ -324,7 +328,7 @@ int Bp(int a)  {
         case FPAR:
             break;
         default:
-            syntax_error("B'", "UNDERSCORE, SEMICOLON, PLUS, MINUS, DIV, MULT, EXPON");
+            erreur("B'", "_, ;, +, -, /, *, ^, )");
             break;
     }
     return a;
@@ -334,9 +338,7 @@ int F(void) {
     int a;
     switch (currentToken()->type) {
         case MINUS: // R20
-            if (currentToken()->type == MINUS) {
-                consume(MINUS);
-            }
+            consume(MINUS);
             a = -F();
             break;
         case VAR: // R21
@@ -355,7 +357,7 @@ int F(void) {
             consume(FPAR);
             break;
         default:
-            syntax_error("F", "MINUS, VAR, INT, OPAR");
+            erreur("F", "-, VAR, INT, (");
             break;
     }
     return a;
