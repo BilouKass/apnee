@@ -6,14 +6,14 @@
 #define SIMPLE_ASSIGN_ASSIGNATIONS_H
 void S(void);
 void A(void);
-void L(void);
-void V(void);
-void E(void);
-void Ep(void);
-void T(void);
-void Tp(void);
-void G(void);
-void B(void);
-void Bp(void);
-void F(void);
+int L(void);
+char *V(void);
+int E(void);
+int Ep(int a);
+int T(void);
+int Tp(int a);
+int G(void);
+int B(void);
+int Bp(int a);
+int F(void);
 #endif //SIMPLE_ASSIGN_ASSIGNATIONS_H
