@@ -116,3 +116,7 @@ R0 valait S $\Rightarrow$ A; alors que $A \rightarrow L;A $ Et donc il y avait u
 
 De même pour le - unaire
 
+Egalement un oubli bête dans la grammaire (le C de la combinaison) m'a fait reprendre une bonne partie de la grammaire.
+
+Enfin la lutte contre les segfault en cas de ; manquant à la fin a été pour moi une assez grande frustration et la solution que j'ai trouvé actuellement ne me satisfait pas vraimant.
+
