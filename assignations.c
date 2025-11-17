@@ -63,9 +63,9 @@ int powe(int a, int b){ //algo naif de l'exponentiation
 int combi(int n, int k) { //algo opti de K parmis N
     if (k > n) return 0;
     if (k == 0 || k == n) return 1;
-    
+    int cmp =  ((n - k) < k) ? n - k : k;
     int out = 1;
-    for (int i = 1; i <= ((n - k) < k) ? n - k : k; i++) {
+    for (int i = 1; i <= cmp; i++) {
         out *= (n-k+i) / i;
     }
     return out;
@@ -313,7 +313,8 @@ int B(void) {
             a = B();
             consume(UNDERSCORE);
             b = F();
-            a = combi(a,b);
+            a = combi(b,a);
+            //printf("%d\n", a);
             break;
         default:
             erreur("B", "-, (, INT or VAR");
