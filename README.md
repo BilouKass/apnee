@@ -47,7 +47,7 @@ $$
 & R_{11}: \quad T \rightarrow G \\
 & R_{12}: \quad G \rightarrow B \wedge G \\
 & R_{13}: \quad G \rightarrow B \\
-& R_{14}: \quad B \rightarrow B \_ F \\
+& R_{14}: \quad B \rightarrow C\wedge B \_ F \\
 & R_{15}: \quad B \rightarrow F \\
 & R_{16}: \quad F \rightarrow \text{var} \\
 & R_{17}: \quad F \rightarrow a \\
@@ -76,13 +76,12 @@ R_{13}: \quad & T' \rightarrow / G T' \\
 R_{14}: \quad & T' \rightarrow \varepsilon \\
 R_{15}: \quad & G \rightarrow B \wedge G \\
 R_{16}: \quad & G \rightarrow B \\
-R_{17}: \quad & B \rightarrow F B' \\
-R_{18}: \quad & B' \rightarrow \_ F B' \\
-R_{19}: \quad & B' \rightarrow \varepsilon \\
-R_{20}: \quad & F \rightarrow - F \\
-R_{21}: \quad & F \rightarrow \text{var} \\
-R_{22}: \quad & F \rightarrow a \\
-R_{23}: \quad & F \rightarrow (L)
+R_{17}: \quad & B \rightarrow C \wedge B \_ F \\
+R_{18}: \quad & B \rightarrow F \\
+R_{19}: \quad & F \rightarrow - F \\
+R_{20}: \quad & F \rightarrow \text{var} \\
+R_{21}: \quad & F \rightarrow a \\
+R_{22}: \quad & F \rightarrow (L)
 \end{aligned}
 $$
 
@@ -90,20 +89,19 @@ $$
 voici la table LL1 (en CSV dans le ficher 1er.csv)
 
 
-| LL(1) | `;` | `+` | `-` | `/` | `*` | `=` | `^` | `(` | `)` | `a` | `var` | `_` | `$` |
-|-------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-------|-----|-----|
-| $S$ | | | $R_0$ | | | | | $R_0$ | | $R_0$ | $R_0$ | | $R_0$ |
-| $A$ | $R_2$ | | $R_1$ | | | | | $R_1$ | | $R_1$ | $R_1$ | | $R_2$ |
-| $L$ | | | $R_4$ | | | | | $R_4$ | | $R_4$ | $R_3/R_4$ | | |
-| $V$ | | | | | | | | | | | $R_5$ | | |
-| $E$ | | | $R_6$ | | | | | $R_6$ | | $R_6$ | $R_6/R_7$ | | |
-| $E'$ | $R_{10}$ | $R_9$ | $R_8$ | | | | | | $R_{10}$ | | | | $R_{10}$ |
-| $T$ | | | $R_{11}$ | | | | | $R_{11}$ | | $R_{11}$ | $R_{11}$ | | |
-| $T'$ | $R_{14}$ | $R_{14}$ | $R_{14}$ | $R_{13}$ | $R_{12}$ | | | | $R_{14}$ | | | | $R_{14}$ |
-| $G$ | | | $R_{15}/R_{16}$ | | | | | $R_{16}$ | | $R_{15}/R_{16}$ | $R_{15}/R_{16}$ | | |
-| $B$ | | | $R_{17}$ | | | | | $R_{17}$ | | $R_{17}$ | $R_{17}$ | | |
-| $B'$ | $R_{19}$ | $R_{19}$ | $R_{19}$ | $R_{19}$ | $R_{19}$ | | $R_{19}$ | | | | | $R_{18}$ | $R_{19}$ |
-| $F$ | | | $R_{20}$ | | | | | $R_{23}$ | | $R_{22}$ | $R_{21}$ | | |
+| LL(1) | `;` | `+` | `-` | `/` | `*` | `=` | `^` | `(` | `)` | `a` | `var` | `_` | `C` |`$` |
+|-------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-------|-----|-----|----|
+| $S$ | | | $R_0$ | | | | | $R_0$ | | $R_0$ | $R_0$ | | | $R_0$ |
+| $A$ | $R_2$ | | $R_1$ | | | | | $R_1$ | | $R_1$ | $R_1$ | | | $R_2$ |
+| $L$ | | | $R_4$ | | | | | $R_4$ | | $R_4$ | $R_3/R_4$ | | $R_4$ | |
+| $V$ | | | | | | | | | | | $R_5$ | | | |
+| $E$ | | | $R_6$ | | | | | $R_6$ | | $R_6$ | $R_6/R_7$ | | $R_6$  | |
+| $E'$ | $R_{10}$ | $R_9$ | $R_8$ | | | | | | $R_{10}$ | | | | | $R_{10}$ |
+| $T$ | | | $R_{11}$ | | | | | $R_{11}$ | | $R_{11}$ | $R_{11}$ | | $R_{11}$ | |
+| $T'$ | $R_{14}$ | $R_{14}$ | $R_{14}$ | $R_{13}$ | $R_{12}$ | | | | $R_{14}$ | | | | | $R_{14}$ |
+| $G$ | | | $R_{15}/R_{16}$ | | | | | $R_{15}/R_{16}$ | | $R_{15}/R_{16}$ | $R_{15}/R_{16}$ | | $R_{15}/R_{16}$ | |
+| $B$ | | | $R_{18}$ | | | | | $R_{18}$ | | $R_{18}$ | $R_{18}$ | | $R_{17}$ | |
+| $F$ | | | $R_{19}$ | | | | | $R_{22}$ | | $R_{21}$ | $R_{20}$ | | | |
 
 On peut voir qu'il y a plusieurs conflits notament à G et E que l'on résout en regardant le lexeme suivant
 ## Difficultés rencontrées
@@ -116,6 +114,3 @@ R0 valait S $\Rightarrow$ A; alors que $A \rightarrow L;A $ Et donc il y avait u
 
 De même pour le - unaire
 
-## Remarques éventuelles
-
-Si nécessaires...

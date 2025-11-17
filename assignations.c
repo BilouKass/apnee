@@ -93,6 +93,7 @@ const char* token_name(int type) {
 
 void erreur(const char* non_terminal, const char* expected) {
     Token* tok = currentToken();
+    fprintf(stdout, "!!! ERREUR !!!");
     if (tok == NULL) {
         fprintf(stderr, "SYNTAX ERROR in %s: unexpected EOF\n", non_terminal);
         fprintf(stderr, "  Expected: %s\n", expected);
@@ -142,6 +143,7 @@ int L(void) {
     case MINUS: //R4
     case OPAR: //R4
     case INT: //R4
+    case COMBINATION:
         a = E();
         break;
     case VAR: //R3 ET R4
@@ -179,6 +181,7 @@ int E(void) {
     case MINUS: //R6
     case OPAR: //R6
     case INT: //R6
+    case COMBINATION:
     case VAR: //R6 OU R7 
         if (lookup(2)->type == ASSIGN) { //R7
             v = V();
@@ -233,6 +236,7 @@ int T(void) {
     case OPAR:
     case VAR:
     case INT: 
+    case COMBINATION:
         a = G();
         a = Tp(a);
         break;
@@ -277,12 +281,13 @@ int G(void) {
         case VAR: //R15 et R16
         case INT: //R15 et R16
         case OPAR: //R15 et R16
-            if (lookup(2)->type == EXPON) { //R16
+        case COMBINATION:
+            if (lookup(2)->type == EXPON && lookup(4)->type != UNDERSCORE) { //R15
                 a = B();
                 consume(EXPON);
                 b = G(); //associativité à droite donc on récupère puis on opère
                 a = pow(a, b);
-            } else {    //R15
+            } else {    //R16
                 a = B();
             }
             break;
@@ -294,14 +299,21 @@ int G(void) {
 }
 
 int B(void) {
-    int a;
+    int a; int b;
     switch (currentToken()->type) {
-        case MINUS: //R17
+        case MINUS: //R18
         case OPAR:
         case INT:
         case VAR:
             a = F();
-            a = Bp(a);
+            break;
+        case COMBINATION:
+            consume(COMBINATION);
+            consume(EXPON);
+            a = B();
+            consume(UNDERSCORE);
+            b = F();
+            a = combi(a,b);
             break;
         default:
             erreur("B", "-, (, INT or VAR");
@@ -310,48 +322,25 @@ int B(void) {
     return a;
 }
 
-int Bp(int a)  {
-    int b;
-    switch (currentToken()->type) {
-        case UNDERSCORE: //R18
-            consume(UNDERSCORE);
-            b = F();
-            a = combi(a, b);
-            a = Bp(a);
-            break;
-        case SEMICOLON: //R19
-        case PLUS:
-        case MINUS:
-        case DIV:
-        case MULT:
-        case EXPON:
-        case FPAR:
-            break;
-        default:
-            erreur("B'", "_, ;, +, -, /, *, ^, )");
-            break;
-    }
-    return a;
-}
 
 int F(void) {
     int a;
     switch (currentToken()->type) {
-        case MINUS: // R20
+        case MINUS: // R19
             consume(MINUS);
             a = -F();
             break;
-        case VAR: // R21
+        case VAR: // R20
             //lecture du contenu de var
             a = get_value(currentToken()->text);
             consume(VAR);
             break;
-        case INT: // R22
+        case INT: // R21
             a = currentToken()->value;
             consume(INT);
             //return valu int
             break;
-        case OPAR: // R23
+        case OPAR: // R22
             consume(OPAR);
             a = L();
             consume(FPAR);

@@ -14,6 +14,5 @@ int T(void);
 int Tp(int a);
 int G(void);
 int B(void);
-int Bp(int a);
 int F(void);
 #endif //SIMPLE_ASSIGN_ASSIGNATIONS_H

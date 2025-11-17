@@ -1,4 +1,4 @@
-S -> A;
+S -> A
 A -> L;A
 A -> epsi	
 L -> V = E
@@ -12,13 +12,13 @@ T -> T / G
 T -> G
 G -> B ^ G
 G -> B
-B -> B _ F
+B -> C^B _ F
 B -> F
 F -> var_name
 F -> a
 F -> (L)
 
-S -> A; 
+S -> A
 A -> L;A 
 A -> epsi 
 L -> V = E 
@@ -35,9 +35,8 @@ T' -> /GT'
 T' -> epsi
 G -> B ^ G
 G -> B
-B -> FB'
-B' -> _FB'
-B' -> epsi
+B -> C^B _ F
+B -> F
 F -> -F
 F -> var_name
 F -> a
