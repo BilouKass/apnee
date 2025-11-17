@@ -118,5 +118,5 @@ De même pour le - unaire
 
 Egalement un oubli bête dans la grammaire (le C de la combinaison) m'a fait reprendre une bonne partie de la grammaire.
 
-Enfin la lutte contre les segfault en cas de ; manquant à la fin a été pour moi une assez grande frustration et la solution que j'ai trouvé actuellement ne me satisfait pas vraimant.
+Enfin la lutte contre les segfault en cas de ; manquant à la fin a été pour moi une assez grande frustration et la solution que j'ai trouvé actuellement ne me satisfait pas vraimant. Le fait de simplement `lookup(2) == NULL` au debut permet d'empêcher efficacement les segfaults mais sans grand lien avec la grammaire.
 
