@@ -13,6 +13,7 @@ T -> G
 G -> B ^ G
 G -> B
 B -> C^B _ F
+B -> C_ B ^ F
 B -> F
 F -> var_name
 F -> a
@@ -36,6 +37,7 @@ T' -> epsi
 G -> B ^ G
 G -> B
 B -> C^B _ F
+B -> C_ B ^ F
 B -> F
 F -> -F
 F -> var_name

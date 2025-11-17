@@ -48,10 +48,11 @@ $$
 & R_{12}: \quad G \rightarrow B \wedge G \\
 & R_{13}: \quad G \rightarrow B \\
 & R_{14}: \quad B \rightarrow C\wedge B \_ F \\
-& R_{15}: \quad B \rightarrow F \\
-& R_{16}: \quad F \rightarrow \text{var} \\
-& R_{17}: \quad F \rightarrow a \\
-& R_{18}: \quad F \rightarrow (L)
+& R_{15}: \quad B \rightarrow C\_ B \wedge F \\
+& R_{16}: \quad B \rightarrow F \\
+& R_{17}: \quad F \rightarrow \text{var} \\
+& R_{18}: \quad F \rightarrow a \\
+& R_{19}: \quad F \rightarrow (L)
 \end{aligned}
 $$
 
@@ -77,11 +78,12 @@ R_{14}: \quad & T' \rightarrow \varepsilon \\
 R_{15}: \quad & G \rightarrow B \wedge G \\
 R_{16}: \quad & G \rightarrow B \\
 R_{17}: \quad & B \rightarrow C \wedge B \_ F \\
-R_{18}: \quad & B \rightarrow F \\
-R_{19}: \quad & F \rightarrow - F \\
-R_{20}: \quad & F \rightarrow \text{var} \\
-R_{21}: \quad & F \rightarrow a \\
-R_{22}: \quad & F \rightarrow (L)
+R_{18}: \quad & B \rightarrow C \_ B \wedge F \\
+R_{19}: \quad & B \rightarrow F \\
+R_{20}: \quad & F \rightarrow - F \\
+R_{21}: \quad & F \rightarrow \text{var} \\
+R_{22}: \quad & F \rightarrow a \\
+R_{23}: \quad & F \rightarrow (L)
 \end{aligned}
 $$
 
@@ -91,17 +93,17 @@ voici la table LL1 (en CSV dans le ficher 1er.csv)
 
 | LL(1) | `;` | `+` | `-` | `/` | `*` | `=` | `^` | `(` | `)` | `a` | `var` | `_` | `C` |`$` |
 |-------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-------|-----|-----|----|
-| $S$ | | | $R_0$ | | | | | $R_0$ | | $R_0$ | $R_0$ | | | $R_0$ |
-| $A$ | $R_2$ | | $R_1$ | | | | | $R_1$ | | $R_1$ | $R_1$ | | | $R_2$ |
+| $S$ | | | $R_0$ | | | | | $R_0$ | | $R_0$ | $R_0$ | | $R_0$ | $R_0$ |
+| $A$ | $R_2$ | | $R_1$ | | | | | $R_1$ | | $R_1$ | $R_1$ | | $R_1$ | $R_2$ |
 | $L$ | | | $R_4$ | | | | | $R_4$ | | $R_4$ | $R_3/R_4$ | | $R_4$ | |
 | $V$ | | | | | | | | | | | $R_5$ | | | |
 | $E$ | | | $R_6$ | | | | | $R_6$ | | $R_6$ | $R_6/R_7$ | | $R_6$  | |
 | $E'$ | $R_{10}$ | $R_9$ | $R_8$ | | | | | | $R_{10}$ | | | | | $R_{10}$ |
 | $T$ | | | $R_{11}$ | | | | | $R_{11}$ | | $R_{11}$ | $R_{11}$ | | $R_{11}$ | |
 | $T'$ | $R_{14}$ | $R_{14}$ | $R_{14}$ | $R_{13}$ | $R_{12}$ | | | | $R_{14}$ | | | | | $R_{14}$ |
-| $G$ | | | $R_{15}/R_{16}$ | | | | | $R_{15}/R_{16}$ | | $R_{15}/R_{16}$ | $R_{15}/R_{16}$ | | $R_{15}/R_{16}$ | |
-| $B$ | | | $R_{18}$ | | | | | $R_{18}$ | | $R_{18}$ | $R_{18}$ | | $R_{17}$ | |
-| $F$ | | | $R_{19}$ | | | | | $R_{22}$ | | $R_{21}$ | $R_{20}$ | | | |
+| $G$ | | | $R_{15}/R_{16}$ | | | | | $R_{15}/R_{16}$ | | $R_{15}/R_{16}$ | $R_{15}/R_{16}$ | | $R_{15}/R_{16}/R_{17}$ | |
+| $B$ | | | $R_{19}$ | | | | | $R_{19}$ | | $R_{19}$ | $R_{19}$ | | $R_{18}$ | |
+| $F$ | | | $R_{20}$ | | | | | $R_{23}$ | | $R_{22}$ | $R_{21}$ | | | |
 
 On peut voir qu'il y a plusieurs conflits notament à G et E que l'on résout en regardant le lexeme suivant
 ## Difficultés rencontrées

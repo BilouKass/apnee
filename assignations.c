@@ -66,7 +66,7 @@ int combi(int n, int k) { //algo opti de K parmis N
     int cmp =  ((n - k) < k) ? n - k : k;
     int out = 1;
     for (int i = 1; i <= cmp; i++) {
-        out *= (n-k+i) / i;
+        out = out * (n - cmp + i) / i;
     }
     return out;
 }
@@ -110,6 +110,7 @@ void S(void){
     case INT: //R0
     case MINUS: //R0
     case OPAR: //R0
+    case COMBINATION:
         A();
         break;
     default:
@@ -124,6 +125,9 @@ void A(void) {
     case INT: //R1
     case MINUS: //R1
     case OPAR: //R1
+    case COMBINATION:
+        if (lookup(2) == NULL) //pour eviter le segfault du cas de fin du fichier sans ;
+            erreur("A", ";");
         L();
         consume(SEMICOLON);
         if (currentToken() != NULL)
@@ -147,9 +151,10 @@ int L(void) {
         a = E();
         break;
     case VAR: //R3 ET R4
+
         // fonction de rec de variable et ajouter en mémoire si assignation
-        v = V();
-        if (lookup(2)->type != ASSIGN) { // si R3
+        if (lookup(2)->type == ASSIGN) { // si R3
+            v = V();
             consume(ASSIGN);
             a = E();
             set_value(v, a);
@@ -194,7 +199,6 @@ int E(void) {
         a = Ep(a);
         break;
 
-    
     default:
         erreur("E", "VAR, -, ( or INT");
         break;
@@ -281,8 +285,8 @@ int G(void) {
         case VAR: //R15 et R16
         case INT: //R15 et R16
         case OPAR: //R15 et R16
-        case COMBINATION:
-            if (lookup(2)->type == EXPON && lookup(4)->type != UNDERSCORE) { //R15
+
+            if (lookup(2)->type == EXPON) { //R15
                 a = B();
                 consume(EXPON);
                 b = G(); //associativité à droite donc on récupère puis on opère
@@ -290,6 +294,9 @@ int G(void) {
             } else {    //R16
                 a = B();
             }
+            break;
+        case COMBINATION:
+            a = B();
             break;
         default:
             erreur("G", "-, VAR, INT or (");
@@ -309,11 +316,19 @@ int B(void) {
             break;
         case COMBINATION:
             consume(COMBINATION);
-            consume(EXPON);
-            a = B();
-            consume(UNDERSCORE);
-            b = F();
-            a = combi(b,a);
+            if (currentToken()->type == UNDERSCORE) {
+                consume(UNDERSCORE);
+                a = B();
+                consume(EXPON);
+                b = F();
+                a = combi(a,b);
+            } else {
+                consume(EXPON);
+                a = B();
+                consume(UNDERSCORE);
+                b = F();
+                a = combi(b,a);
+            }
             //printf("%d\n", a);
             break;
         default:
